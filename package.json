@@ -1,13 +1,14 @@
 {
-  "name": "react-stock",
+  "name": "stock-chart",
   "private": true,
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint --fix ./src"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "deploy": "npx gh-pages -d dist"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.12.0",
