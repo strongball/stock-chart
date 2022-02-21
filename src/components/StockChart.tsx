@@ -1,16 +1,16 @@
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
 import { StockData } from '../api/stock';
-import BaseChart from './BaseChart';
-import { Point, DataValue } from './types';
-import Line from './Line';
-import Bar from './Bar';
-import XAxis from './XAxis';
-import YAxis from './YAxis';
+import BaseChart from './chart/BaseChart';
+import { Point, DataValue } from './chart/types';
+import Line from './chart/Line';
+import Bar from './chart/Bar';
+import XAxis from './chart/XAxis';
+import YAxis from './chart/YAxis';
+import Tooltip from './chart/Tooltip';
 
 import { useWheelControl } from '../hooks/wheel';
 import { useSwipeControl } from '../hooks/swipe';
-import Tooltip from './Tooltip';
 
 interface Props {
     width: number;
