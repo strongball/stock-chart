@@ -1,11 +1,11 @@
 import React, { PropsWithChildren, useContext } from 'react';
-import { DataValue, Point } from './types';
+import { DataValue, OnlyDataValueKey } from './types';
 import { ChartContext } from './context';
 
 interface Props<T extends {}> {
     data: T[];
-    x: keyof T;
-    y: keyof T;
+    x: OnlyDataValueKey<T>;
+    y: OnlyDataValueKey<T>;
 }
 const Line = <T,>(props: PropsWithChildren<Props<T>>) => {
     const { data, x, y } = props;
