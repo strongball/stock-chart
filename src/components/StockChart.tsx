@@ -65,8 +65,8 @@ const StockChart: React.FC<Props> = (props) => {
         const max = Math.max(...prices);
         const gap = max - min;
 
-        const minTick = min - gap * 0.2;
-        const maxTick = max + gap * 0.2;
+        const minTick = min - gap * 0.4;
+        const maxTick = max + gap * 0.4;
         const interval = (maxTick - minTick) / 5;
         const ticks: number[] = [];
         let cursor = maxTick;
@@ -74,6 +74,7 @@ const StockChart: React.FC<Props> = (props) => {
             ticks.push(Math.round(cursor * 100) / 100);
             cursor -= interval;
         }
+        ticks.push(Math.round(cursor * 100) / 100);
         // add head and tail
         return ticks;
     }, [inTimeStocks]);
