@@ -56,6 +56,9 @@ export function useSwipeControl({
      */
     const preTouchX = useRef<number | null>();
     const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+        if (e.touches.length > 1) {
+            return;
+        }
         if (!preTouchX.current) {
             preTouchX.current = e.touches[0].screenX;
         }

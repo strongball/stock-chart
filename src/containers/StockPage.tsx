@@ -4,6 +4,9 @@ import { getStock } from '../api/stock';
 
 import StockForm, { FormData } from '../components/StockForm';
 import StockChart from '../components/StockChart';
+import ReactiveDiv from '../components/ReactiveDiv';
+
+import { Card, CardContent, Container, useMediaQuery } from '@mui/material';
 interface Props {}
 const StockPage: React.FC<Props> = (props) => {
     const [stockCode, setStockCode] = useState('AAPL');
@@ -19,22 +22,33 @@ const StockPage: React.FC<Props> = (props) => {
         setStockCode(data.stockCode);
     };
     return (
-        <div>
-            <StockForm initValue={{ stockCode }} onSubmit={handleSubmit} />
-            {data ? (
-                <StockChart
-                    height={400}
-                    width={600}
-                    data={data}
-                    date={date}
-                    onDateChange={setDate}
-                    displayDay={displayDay}
-                    onDisplayDayChange={setDisplayDay}
-                />
-            ) : (
-                'loading...'
-            )}
-        </div>
+        <Container>
+            <Card>
+                <CardContent>
+                    <StockForm initValue={{ stockCode }} onSubmit={handleSubmit} />
+                </CardContent>
+                <CardContent>
+                    {data ? (
+                        <ReactiveDiv
+                            style={{ width: '100%', height: 400 }}
+                            render={({ width, height }) => (
+                                <StockChart
+                                    height={height}
+                                    width={width}
+                                    data={data}
+                                    date={date}
+                                    onDateChange={setDate}
+                                    displayDay={displayDay}
+                                    onDisplayDayChange={setDisplayDay}
+                                />
+                            )}
+                        />
+                    ) : (
+                        'loading...'
+                    )}
+                </CardContent>
+            </Card>
+        </Container>
     );
 };
 export default StockPage;

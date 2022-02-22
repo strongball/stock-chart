@@ -2,6 +2,9 @@ import axios from 'axios';
 
 export interface StockData {
     date: string;
+    open: number;
+    high: number;
+    low: number;
     close: number;
     volume: number;
 }
@@ -18,13 +21,16 @@ export async function getStock(code: string) {
     //     },
     //     headers: {
     //         'x-rapidapi-host': 'alpha-vantage.p.rapidapi.com',
-    //         'x-rapidapi-key': '25736f6270msh628d56ffab28607p1deb15jsnf857454fe357',
+    //         'x-rapidapi-key': import.meta.env.VITE_RAPIDAPI_KEY,
     //     },
     // });
     // const rowData = axiosResult.data['Time Series (Daily)'];
 
     return Object.keys(rowData).map<StockData>((key) => ({
         date: key,
+        open: Number(rowData[key]['1. open']),
+        high: Number(rowData[key]['2. high']),
+        low: Number(rowData[key]['3. low']),
         close: Number(rowData[key]['4. close']),
         volume: Number(rowData[key]['5. volume']),
     }));

@@ -8,8 +8,9 @@ import Bar from './chart/Bar';
 import XAxis from './chart/XAxis';
 import YAxis from './chart/YAxis';
 import Tooltip from './chart/Tooltip';
+import KBar from './chart/KBar';
 
-import { useWheelControl } from '../hooks/wheel';
+import { useZoomControl } from '../hooks/zoom';
 import { useSwipeControl } from '../hooks/swipe';
 
 interface Props {
@@ -57,17 +58,22 @@ const StockChart: React.FC<Props> = (props) => {
         if (inTimeStocks.length === 0) {
             return [];
         }
-        const prices = inTimeStocks.map((pp) => pp.close);
+        const prices = inTimeStocks.map((pp) => [pp.high, pp.low]).flat();
 
-        const min = Math.round(Math.min(...prices) * 0.8 * 100) / 100;
-        const max = Math.round(Math.max(...prices) * 1.2 * 100) / 100;
-        const interval = Math.round(((max - min) / 5) * 100) / 100;
+        const min = Math.min(...prices);
+        const max = Math.max(...prices);
+        const gap = max - min;
+
+        const minTick = min - gap * 0.2;
+        const maxTick = max + gap * 0.2;
+        const interval = (maxTick - minTick) / 5;
         const ticks: number[] = [];
-        let cursor = max;
-        while (cursor >= min) {
-            ticks.push(cursor);
+        let cursor = maxTick;
+        while (cursor >= minTick) {
+            ticks.push(Math.round(cursor * 100) / 100);
             cursor -= interval;
         }
+        // add head and tail
         return ticks;
     }, [inTimeStocks]);
 
@@ -89,9 +95,9 @@ const StockChart: React.FC<Props> = (props) => {
         return ticks;
     }, [inTimeStocks]);
 
-    const { handleWheel } = useWheelControl({
-        onWheel(value) {
-            const newDisplayDay = Math.max(6, displayDay + Math.round(value / 20));
+    const zoomEvent = useZoomControl({
+        onZoomChange(value) {
+            const newDisplayDay = Math.min(Math.max(6, displayDay + Math.round(value / 20)), data?.length || Infinity);
             onDisplayDayChange && onDisplayDayChange(newDisplayDay);
         },
     });
@@ -121,22 +127,19 @@ const StockChart: React.FC<Props> = (props) => {
                 yAxisTicks={priceYAxisTicks}
                 yTickWidth={50}
                 DivProps={{
-                    onWheel: handleWheel,
+                    ...zoomEvent,
                     ...swipeEvent,
+                    onTouchMove(e) {
+                        zoomEvent?.onTouchMove && zoomEvent?.onTouchMove(e);
+                        swipeEvent?.onTouchMove && swipeEvent?.onTouchMove(e);
+                    },
                 }}
             >
                 <XAxis />
                 <YAxis label={(data) => Number(data).toFixed(2)} />
-                <Line data={inTimeStocks} x="date" y="close" />
-                <Tooltip
-                    render={(data: StockData) => (
-                        <div>
-                            <div>{`日期: ${data.date}`}</div>
-                            <div>{`價格: ${data.close}`}</div>
-                            <div>{`交易量: ${data.volume}`}</div>
-                        </div>
-                    )}
-                />
+                {/* <Line data={inTimeStocks} x="date" y="close" /> */}
+                <KBar data={inTimeStocks} />
+                <Tooltip render={(data: StockData) => <TooltipContent data={data} />} />
             </BaseChart>
             <BaseChart
                 width={width}
@@ -145,22 +148,37 @@ const StockChart: React.FC<Props> = (props) => {
                 yAxisTicks={volumeYAxisTicks}
                 yTickWidth={50}
                 DivProps={{
-                    onWheel: handleWheel,
+                    ...zoomEvent,
                     ...swipeEvent,
+                    onTouchMove(e) {
+                        zoomEvent?.onTouchMove && zoomEvent?.onTouchMove(e);
+                        swipeEvent?.onTouchMove && swipeEvent?.onTouchMove(e);
+                    },
                 }}
             >
                 <YAxis label={(data) => Number(data).toFixed(0)} />
-                <Bar data={inTimeStocks} x="date" y="volume" />
-                <Tooltip
-                    render={(data: StockData) => (
-                        <div>
-                            <div>{`日期: ${data.date}`}</div>
-                            <div>{`價格: ${data.close}`}</div>
-                            <div>{`交易量: ${data.volume}`}</div>
-                        </div>
-                    )}
+                <Bar
+                    data={inTimeStocks}
+                    x="date"
+                    y="volume"
+                    color={(data) => (data.close >= data.open ? 'green' : 'red')}
                 />
+                <Tooltip render={(data: StockData) => <TooltipContent data={data} />} />
             </BaseChart>
+        </div>
+    );
+};
+
+const TooltipContent: React.FC<{ data: StockData }> = (props) => {
+    const { data } = props;
+    return (
+        <div>
+            <div>{`Date: ${data.date}`}</div>
+            <div>{`Open: ${data.open}`}</div>
+            <div>{`High: ${data.high}`}</div>
+            <div>{`Low: ${data.low}`}</div>
+            <div>{`Close: ${data.close}`}</div>
+            <div>{`Volume: ${data.volume}`}</div>
         </div>
     );
 };
