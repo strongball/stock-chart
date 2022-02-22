@@ -1,9 +1,10 @@
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
+import numeral from 'numeral';
+
 import { StockData } from '../api/stock';
 import BaseChart from './chart/BaseChart';
 import { Point, DataValue } from './chart/types';
-import Line from './chart/Line';
 import Bar from './chart/Bar';
 import XAxis from './chart/XAxis';
 import YAxis from './chart/YAxis';
@@ -125,7 +126,7 @@ const StockChart: React.FC<Props> = (props) => {
                 height={(height / 3) * 2}
                 xAxisTicks={xAxisTicks}
                 yAxisTicks={priceYAxisTicks}
-                yTickWidth={50}
+                yTickWidth={30}
                 DivProps={{
                     ...zoomEvent,
                     ...swipeEvent,
@@ -146,7 +147,7 @@ const StockChart: React.FC<Props> = (props) => {
                 height={height / 3}
                 xAxisTicks={xAxisTicks}
                 yAxisTicks={volumeYAxisTicks}
-                yTickWidth={50}
+                yTickWidth={30}
                 DivProps={{
                     ...zoomEvent,
                     ...swipeEvent,
@@ -156,7 +157,7 @@ const StockChart: React.FC<Props> = (props) => {
                     },
                 }}
             >
-                <YAxis label={(data) => Number(data).toFixed(0)} />
+                <YAxis label={(data) => numeral(data).format('0 a')} />
                 <Bar
                     data={inTimeStocks}
                     x="date"
