@@ -57,7 +57,7 @@ const StockChart: React.FC<Props> = (props) => {
         if (inTimeStocks.length === 0) {
             return [];
         }
-        const prices = inTimeStocks.map((pp) => pp.value);
+        const prices = inTimeStocks.map((pp) => pp.close);
 
         const min = Math.round(Math.min(...prices) * 0.8 * 100) / 100;
         const max = Math.round(Math.max(...prices) * 1.2 * 100) / 100;
@@ -127,12 +127,12 @@ const StockChart: React.FC<Props> = (props) => {
             >
                 <XAxis />
                 <YAxis label={(data) => Number(data).toFixed(2)} />
-                <Line data={inTimeStocks} x="date" y="value" />
+                <Line data={inTimeStocks} x="date" y="close" />
                 <Tooltip
                     render={(data: StockData) => (
                         <div>
                             <div>{`日期: ${data.date}`}</div>
-                            <div>{`價格: ${data.value}`}</div>
+                            <div>{`價格: ${data.close}`}</div>
                             <div>{`交易量: ${data.volume}`}</div>
                         </div>
                     )}
@@ -155,7 +155,7 @@ const StockChart: React.FC<Props> = (props) => {
                     render={(data: StockData) => (
                         <div>
                             <div>{`日期: ${data.date}`}</div>
-                            <div>{`價格: ${data.value}`}</div>
+                            <div>{`價格: ${data.close}`}</div>
                             <div>{`交易量: ${data.volume}`}</div>
                         </div>
                     )}

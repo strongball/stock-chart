@@ -2,17 +2,12 @@ import axios from 'axios';
 
 export interface StockData {
     date: string;
-    value: number;
+    close: number;
     volume: number;
 }
 export async function getStock(code: string) {
     const rowData = MockData['Time Series (Daily)'];
-    return Object.keys(rowData).map<StockData>((key) => ({
-        date: key,
-        value: Number(rowData[key]['4. close']),
-        volume: Number(rowData[key]['5. volume']),
-    }));
-    // return axios.request({
+    // const axiosResult = await axios.request({
     //     method: 'GET',
     //     url: 'https://alpha-vantage.p.rapidapi.com/query',
     //     params: {
@@ -26,6 +21,13 @@ export async function getStock(code: string) {
     //         'x-rapidapi-key': '25736f6270msh628d56ffab28607p1deb15jsnf857454fe357',
     //     },
     // });
+    // const rowData = axiosResult.data['Time Series (Daily)'];
+
+    return Object.keys(rowData).map<StockData>((key) => ({
+        date: key,
+        close: Number(rowData[key]['4. close']),
+        volume: Number(rowData[key]['5. volume']),
+    }));
 }
 
 interface APIResult {

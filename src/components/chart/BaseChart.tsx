@@ -64,7 +64,16 @@ const BaseChart: React.FC<Props> = (props) => {
                 onHoverItem: setHoverItem,
             }}
         >
-            <div {...DivProps} style={{ ...DivProps?.style, width: width, height: height }}>
+            <div
+                {...DivProps}
+                className="chart-root"
+                style={{
+                    ...DivProps?.style,
+                    width: width,
+                    height: height,
+                    cursor: DivProps?.onMouseDown ? 'grab' : undefined,
+                }}
+            >
                 <svg viewBox={`0 0 ${width} ${height}`}>{props.children}</svg>
             </div>
         </ChartContext.Provider>

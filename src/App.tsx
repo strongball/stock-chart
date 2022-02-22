@@ -4,7 +4,7 @@ import StockPage from './containers/StockPage';
 
 const App: React.FC = (props) => {
     return (
-        <div>
+        <div className="container">
             <StockPage />
         </div>
     );
