@@ -7,10 +7,11 @@ import StockChart from '../components/StockChart';
 import ReactiveDiv from '../components/ReactiveDiv';
 
 import { Card, CardContent, Container, useMediaQuery } from '@mui/material';
+import dayjs from 'dayjs';
 interface Props {}
 const StockPage: React.FC<Props> = (props) => {
     const [stockCode, setStockCode] = useState('AAPL');
-    const [date, setDate] = useState('2022-01-01');
+    const [date, setDate] = useState(dayjs().format('YYYY-MM-DD'));
     const [displayDay, setDisplayDay] = useState(30);
     const { data } = useSWR(stockCode, (key) => {
         if (!key) {
