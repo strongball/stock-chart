@@ -8,6 +8,7 @@
     "preview": "vite preview",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
+    "predeploy": "npm run build",
     "deploy": "npx gh-pages -d dist"
   },
   "dependencies": {

@@ -109,6 +109,7 @@ const StockChart: React.FC<Props> = (props) => {
      */
     const minAllowDate = data?.[data.length - 1].date;
     const maxAllowDate = data?.[0].date;
+    const tickWidth = width / displayDay;
     const swipeEvent = useSwipeControl({
         onSwipe(value) {
             const changeValue = Math.round(value / 10);
@@ -119,6 +120,7 @@ const StockChart: React.FC<Props> = (props) => {
                 return;
             }
         },
+        threshold: tickWidth,
     });
     return (
         <div>
